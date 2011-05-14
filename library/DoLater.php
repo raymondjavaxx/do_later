@@ -153,7 +153,7 @@ class DoLater {
 	 *
 	 * @return void
 	 */
-	public static function proccessQueue() {
+	public static function processQueue() {
 		while ($job = DoLaterJob::nextJob()) {
 			if ($job->acquireLock()) {
 				$job->perform();
