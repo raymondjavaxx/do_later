@@ -184,6 +184,7 @@ class DoLater {
 		));
 
 		$job->save();
+		return $job;
 	}
 
 	/**
