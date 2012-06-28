@@ -17,11 +17,49 @@
  *
  * @package DoLater
  */
-class DoLaterJob extends Rox_ActiveRecord {
 
-	public static function model($class = __CLASS__) {
-		return parent::model($class);
-	}
+class DoLaterJob extends \rox\ActiveRecord {
+	/**
+	 * Table name
+	 *
+	 * @var string
+	 */
+	protected static $_table;
+
+	/**
+	 * Attribute map
+	 *
+	 * @var array
+	 */
+	protected static $_attributeMap;
+
+	/**
+	 * List of one-to-many associations
+	 *
+	 * @var array
+	 */
+	protected static $_hasMany = array();
+
+	/**
+	 * List of one-to-one associations
+	 *
+	 * @var array
+	 */
+	protected static $_hasOne = array();
+
+	/**
+	 * List of one-to-one associations
+	 *
+	 * @var array
+	 */
+	protected static $_belongsTo = array();
+
+	/**
+	 * Timezone of magic timestamp attributes
+	 *
+	 * @var string
+	 */
+	protected static $_timestampsTimezone = 'local';
 
 	/**
 	 * Returns the next available job
@@ -31,7 +69,7 @@ class DoLaterJob extends Rox_ActiveRecord {
 	public static function nextJob() {
 		$now = date('Y-m-d H:i:s');
 		$conditions = array('locked' => false, "`run_at` < '{$now}'");
-		return self::model()->findFirst(array('conditions' => $conditions));
+		return static::findFirst(array('conditions' => $conditions));
 	}
 
 	/**
@@ -76,8 +114,8 @@ class DoLaterJob extends Rox_ActiveRecord {
 	 * @throws DoLaterException
 	 * @return void
 	 */
-	public function save() {
-		if (!parent::save()) {
+	public function save($options = array()) {
+		if (!parent::save($options)) {
 			throw new DoLaterException('Failed to save job');
 		}
 	}
@@ -107,7 +145,7 @@ class DoLaterJob extends Rox_ActiveRecord {
  *
  * @package DoLater
  */
-class DoLaterException extends Exception {
+class DoLaterException extends \Exception {
 }
 
 /**
@@ -146,6 +184,7 @@ class DoLater {
 		));
 
 		$job->save();
+		return $job;
 	}
 
 	/**
